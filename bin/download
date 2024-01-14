@@ -19,3 +19,4 @@ filename=$TOOL_NAME-v$ASDF_INSTALL_VERSION-$platform-$arch
 download_release "$ASDF_INSTALL_VERSION" "$download_dir" "$filename"
 
 mv "$download_dir/$filename" "$download_dir/virtctl"
+chmod +x "$download_dir/virtctl"

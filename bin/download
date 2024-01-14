@@ -11,7 +11,10 @@ source "${plugin_dir}/lib/utils.bash"
 mkdir -p "$ASDF_DOWNLOAD_PATH"
 
 download_dir="$ASDF_DOWNLOAD_PATH"
+arch=$(get_arch)
+platform=$(get_platform)
+filename=$TOOL_NAME-v$version-$platform-$arch
 
-download_release "$ASDF_INSTALL_VERSION" "$download_dir"
+download_release "$ASDF_INSTALL_VERSION" "$download_dir" "$filename"
 
-mv "$download_dir/virtctl-v$ASDF_INSTALL_VERSION-*" "$download_dir/virtctl"
+mv "$download_dir/$filename" "$download_dir/virtctl"

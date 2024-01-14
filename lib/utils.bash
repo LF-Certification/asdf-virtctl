@@ -34,13 +34,10 @@ list_all_versions() {
 }
 
 download_release() {
-	local version download_dir arch platform
+	local version download_dir filename
 	version="$1"
 	download_dir="$2"
-
-	arch=$(get_arch)
-	platform=$(get_platform)
-	filename=$TOOL_NAME-v$version-$platform-$arch
+	filename="$3"
 
 	url="$GH_REPO/releases/download/v$version/$filename"
 

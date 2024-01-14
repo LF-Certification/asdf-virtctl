@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for virtctl.
 GH_REPO="https://github.com/kubevirt/kubevirt"
 TOOL_NAME="virtctl"
 TOOL_TEST="virtctl version --client"
@@ -31,23 +30,59 @@ list_github_tags() {
 }
 
 list_all_versions() {
-	# TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-	# Change this function if virtctl has other means of determining installable versions.
 	list_github_tags
 }
 
 download_release() {
-	local version filename url
+	local version download_dir arch platform
 	version="$1"
-	filename="$2"
+	download_dir="$2"
 
-	# TODO: Adapt the release URL convention for virtctl
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	arch=$(get_arch)
+	platform=$(get_platform)
+	filename=$TOOL_NAME-v$version-$platform-$arch
+
+	url="$GH_REPO/releases/download/v$version/$filename"
 
 	echo "* Downloading $TOOL_NAME release $version..."
-	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+	curl "${curl_opts[@]}" -o "$download_dir/$filename" -C - "$url" || fail "Could not download $url"
 }
 
+get_arch() {
+  arch=$(uname -m | tr '[:upper:]' '[:lower:]')
+  case ${arch} in
+    arm64)
+      arch='arm64'
+      ;;
+    x86_64)
+      arch='amd64'
+      ;;
+    *)
+      echo "Unsupported arch: ${arch}"
+      exit 1
+      ;;
+  esac
+
+  echo "${arch}"
+}
+
+get_platform() {
+  plat=$(uname | tr '[:upper:]' '[:lower:]')
+  case ${plat} in
+    darwin)
+      plat='darwin'
+      ;;
+    linux)
+      plat='linux'
+      ;;
+    *)
+      echo "Unsupported arch: ${arch}"
+      exit 1
+      ;;
+  esac
+
+  echo "${plat}"
+}
 install_version() {
 	local install_type="$1"
 	local version="$2"
@@ -61,7 +96,6 @@ install_version() {
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
 
-		# TODO: Assert virtctl executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."

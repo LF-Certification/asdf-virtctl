@@ -49,39 +49,39 @@ download_release() {
 }
 
 get_arch() {
-  arch=$(uname -m | tr '[:upper:]' '[:lower:]')
-  case ${arch} in
-    arm64)
-      arch='arm64'
-      ;;
-    x86_64)
-      arch='amd64'
-      ;;
-    *)
-      echo "Unsupported arch: ${arch}"
-      exit 1
-      ;;
-  esac
+	arch=$(uname -m | tr '[:upper:]' '[:lower:]')
+	case ${arch} in
+	arm64)
+		arch='arm64'
+		;;
+	x86_64)
+		arch='amd64'
+		;;
+	*)
+		echo "Unsupported arch: ${arch}"
+		exit 1
+		;;
+	esac
 
-  echo "${arch}"
+	echo "${arch}"
 }
 
 get_platform() {
-  plat=$(uname | tr '[:upper:]' '[:lower:]')
-  case ${plat} in
-    darwin)
-      plat='darwin'
-      ;;
-    linux)
-      plat='linux'
-      ;;
-    *)
-      echo "Unsupported arch: ${arch}"
-      exit 1
-      ;;
-  esac
+	plat=$(uname | tr '[:upper:]' '[:lower:]')
+	case ${plat} in
+	darwin)
+		plat='darwin'
+		;;
+	linux)
+		plat='linux'
+		;;
+	*)
+		echo "Unsupported arch: ${arch}"
+		exit 1
+		;;
+	esac
 
-  echo "${plat}"
+	echo "${plat}"
 }
 install_version() {
 	local install_type="$1"
